@@ -26,8 +26,8 @@ func main() {
 	testKey := "testKey"
 	httpSrv := http.NewServer(
 		http.Address(":8000"),
-		http.Middleware(
-			jwt.Server(func(token *jwtv5.Token) (interface{}, error) {
+		http.Middleware( // 作为默认的中间件（可以有多个）
+			jwt.Server(func(token *jwtv5.Token) (interface{}, error) { // 秘钥生成函数
 				return []byte(testKey), nil
 			}),
 		),
@@ -35,7 +35,7 @@ func main() {
 	grpcSrv := grpc.NewServer(
 		grpc.Address(":9000"),
 		grpc.Middleware(
-			jwt.Server(func(token *jwtv5.Token) (interface{}, error) {
+			jwt.Server(func(token *jwtv5.Token) (interface{}, error) { // 秘钥生成函数
 				return []byte(testKey), nil
 			}),
 		),

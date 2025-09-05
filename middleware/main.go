@@ -39,6 +39,7 @@ func loggingMiddleware(handler middleware.Handler) middleware.Handler {
 }
 
 func main() {
+
 	httpSrv := http.NewServer(
 		http.Address(":8000"),
 		http.Middleware(
@@ -53,9 +54,12 @@ func main() {
 			authMiddleware,
 		),
 	)
+
 	s := &server{}
+
 	helloworld.RegisterGreeterServer(grpcSrv, s)
 	helloworld.RegisterGreeterHTTPServer(httpSrv, s)
+
 	app := kratos.New(
 		kratos.Name("helloworld"),
 		kratos.Server(
@@ -63,7 +67,9 @@ func main() {
 			grpcSrv,
 		),
 	)
+
 	if err := app.Run(); err != nil {
 		log.Fatal(err)
 	}
+
 }
