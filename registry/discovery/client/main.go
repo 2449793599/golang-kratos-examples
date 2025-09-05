@@ -7,12 +7,13 @@ import (
 
 	srcgrpc "google.golang.org/grpc"
 
-	"github.com/go-kratos/kratos/contrib/registry/discovery/v2"
 	"github.com/go-kratos/examples/helloworld/helloworld"
+	"github.com/go-kratos/kratos/contrib/registry/discovery/v2"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 )
 
 func main() {
+
 	r := discovery.New(&discovery.Config{
 		Nodes:  []string{"0.0.0.0:7171"},
 		Env:    "dev",
@@ -26,9 +27,11 @@ func main() {
 		grpc.WithEndpoint("discovery:///helloworld"),
 		grpc.WithDiscovery(r),
 	)
+
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer connGRPC.Close()
 
 	//connHTTP, err := http.NewClient(
@@ -37,22 +40,30 @@ func main() {
 	//	http.WithDiscovery(r),
 	//	http.WithBlock(),
 	//)
+
 	//if err != nil {
 	//	log.Fatal(err)
 	//}
+
 	//defer connHTTP.Close()
 
 	for {
 		callGRPC(connGRPC)
 		time.Sleep(time.Second)
 	}
+
 }
 
 func callGRPC(conn *srcgrpc.ClientConn) {
+
 	client := helloworld.NewGreeterClient(conn)
+
 	reply, err := client.SayHello(context.Background(), &helloworld.HelloRequest{Name: "kratos"})
+
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	log.Printf("[grpc] SayHello %+v\n", reply)
+
 }

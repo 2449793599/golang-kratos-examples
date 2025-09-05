@@ -17,25 +17,39 @@ type server struct {
 }
 
 func (s *server) SayHello(ctx context.Context, in *helloworld.HelloRequest) (*helloworld.HelloReply, error) {
+
 	return &helloworld.HelloReply{Message: "hello"}, nil
+
 }
 
 func authMiddleware(handler middleware.Handler) middleware.Handler {
+
 	return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-		log.Println("auth middleware in", req)
+
+		fmt.Println("auth middleware in", req)
+
 		reply, err = handler(ctx, req)
+
 		fmt.Println("auth middleware out", reply)
+
 		return
+
 	}
+
 }
 
 func loggingMiddleware(handler middleware.Handler) middleware.Handler {
+
 	return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
+
 		fmt.Println("logging middleware in", req)
 		reply, err = handler(ctx, req)
 		fmt.Println("logging middleware out", reply)
+
 		return
+
 	}
+
 }
 
 func main() {

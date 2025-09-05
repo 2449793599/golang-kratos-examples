@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/go-kratos/kratos/contrib/registry/discovery/v2"
 	"github.com/go-kratos/examples/helloworld/helloworld"
+	"github.com/go-kratos/kratos/contrib/registry/discovery/v2"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
@@ -26,7 +26,9 @@ func (s *server) SayHello(ctx context.Context, in *helloworld.HelloRequest) (*he
 }
 
 func main() {
+
 	logger := log.NewStdLogger(os.Stdout)
+
 	logger = log.With(logger, "service", "example.registry.discovery")
 
 	r := discovery.New(&discovery.Config{
@@ -52,6 +54,7 @@ func main() {
 	)
 
 	s := &server{}
+
 	helloworld.RegisterGreeterServer(grpcSrv, s)
 	helloworld.RegisterGreeterHTTPServer(httpSrv, s)
 
@@ -64,7 +67,9 @@ func main() {
 		kratos.Metadata(map[string]string{"color": "gray"}),
 		kratos.Registrar(r),
 	)
+
 	if err := app.Run(); err != nil {
 		log.NewHelper(logger).Fatal(err)
 	}
+
 }

@@ -35,23 +35,31 @@ type server struct {
 
 // SayHello implements helloworld.GreeterServer
 func (s *server) SayHello(ctx context.Context, in *helloworld.HelloRequest) (*helloworld.HelloReply, error) {
+
 	return &helloworld.HelloReply{Message: fmt.Sprintf("Hello %+v", in.Name)}, nil
+
 }
 
 func init() {
+
 	var err error
+
 	_metricRequests, err = metrics.DefaultRequestsCounter(meter, metrics.DefaultServerRequestsCounterName)
+
 	if err != nil {
 		panic(err)
 	}
 
 	_metricSeconds, err = metrics.DefaultSecondsHistogram(meter, metrics.DefaultServerSecondsHistogramName)
+
 	if err != nil {
 		panic(err)
 	}
+
 }
 
 func main() {
+
 	grpcSrv := grpc.NewServer(
 		grpc.Address(":9000"),
 		grpc.Middleware(
@@ -72,6 +80,7 @@ func main() {
 	)
 
 	s := &server{}
+
 	helloworld.RegisterGreeterServer(grpcSrv, s)
 	helloworld.RegisterGreeterHTTPServer(httpSrv, s)
 
@@ -86,4 +95,5 @@ func main() {
 	if err := app.Run(); err != nil {
 		log.Fatal(err)
 	}
+
 }

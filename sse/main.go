@@ -10,10 +10,13 @@ import (
 )
 
 func main() {
+
 	router := mux.NewRouter()
+
 	router.HandleFunc("/sse", handler.SSEHandler)
 
 	httpSrv := http.NewServer(http.Address(":8080"), http.Timeout(0))
+
 	httpSrv.HandlePrefix("/", router)
 
 	app := kratos.New(
@@ -24,7 +27,9 @@ func main() {
 	)
 
 	log.Println("Open http://127.0.0.1:8080/sse in your web browser")
+
 	if err := app.Run(); err != nil {
 		log.Println(err)
 	}
+
 }

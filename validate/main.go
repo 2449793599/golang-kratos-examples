@@ -28,19 +28,24 @@ func (s *server) TestValidate(ctx context.Context, in *v1.Request) (*v1.Reply, e
 }
 
 func main() {
+
 	s := &server{}
+
 	grpcSrv := grpc.NewServer(
 		grpc.Address(":9000"),
 		grpc.Middleware(
 			validate.Validator(),
 		))
+
 	httpSrv := http.NewServer(
 		http.Address(":8000"),
 		http.Middleware(
 			validate.Validator(),
 		))
+
 	v1.RegisterExampleServiceServer(grpcSrv, s)
 	v1.RegisterExampleServiceHTTPServer(httpSrv, s)
+
 	app := kratos.New(
 		kratos.Name(Name),
 		kratos.Server(
@@ -52,4 +57,5 @@ func main() {
 	if err := app.Run(); err != nil {
 		log.Fatal(err)
 	}
+
 }

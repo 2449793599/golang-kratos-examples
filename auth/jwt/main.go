@@ -9,6 +9,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 )
 
@@ -19,11 +20,15 @@ type server struct {
 }
 
 func (s *server) SayHello(ctx context.Context, in *helloworld.HelloRequest) (*helloworld.HelloReply, error) {
+
 	return &helloworld.HelloReply{Message: "hello from service"}, nil
+
 }
 
 func main() {
+
 	testKey := "testKey"
+
 	httpSrv := http.NewServer(
 		http.Address(":8000"),
 		http.Middleware( // 作为默认的中间件（可以有多个）
@@ -40,7 +45,9 @@ func main() {
 			}),
 		),
 	)
+
 	serviceTestKey := "serviceTestKey"
+
 	con, _ := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint("dns:///127.0.0.1:9001"),
@@ -50,11 +57,14 @@ func main() {
 			}),
 		),
 	)
+
 	s := &server{
 		hc: helloworld.NewGreeterClient(con),
 	}
+
 	helloworld.RegisterGreeterServer(grpcSrv, s)
 	helloworld.RegisterGreeterHTTPServer(httpSrv, s)
+
 	app := kratos.New(
 		kratos.Name("helloworld"),
 		kratos.Server(
@@ -62,7 +72,9 @@ func main() {
 			grpcSrv,
 		),
 	)
+
 	if err := app.Run(); err != nil {
 		log.Fatal(err)
 	}
+
 }
